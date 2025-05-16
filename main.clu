@@ -45,18 +45,19 @@ Box =
     DrawBox(center,D1,D2,D3);
 }
 
+ANIMATION_SPEED = 200
 
 // Example: double pendulum
 :IPNS;
-EnableAnimate(CheckBox("Animate",0));
+EnableAnimate(CheckBox("Animate", 0));
 if (ExecMode & !EM_ANIMATE) {
     Data = ReadData("double_pendulum.txt");
     ?N = Size(Data);
 }
  // Number of elements in the list
-?i = round(Time * 200, 0) % N + 1;
-th1= Data(i, 1) + Pi/2;
-th2 = Data(i, 2);
+?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
+th1= Data(i)(1) + Pi/2;
+th2 = Data(i)(2);
 
 X = Slider("Trans. X", -5, 5, 0.1, 0); // Global Translation Slider
 Y = Slider("Trans. Y", -5, 5, 0.1, 0);
