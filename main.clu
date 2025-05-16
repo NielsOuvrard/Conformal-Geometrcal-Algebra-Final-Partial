@@ -5,35 +5,45 @@ DrawFrame(0.5,"axes"); // Reference frame
 //Modified cylinder function
 Cylinder =
 {
-    A = _P(1);//Input 1 (Cylinder Start Point)
-    B = _P(2);//Input 2 (Cylinder End Point)
-    r = _P(3);//Input 3 (Cylinder radius)
+    start_point = _P(1);
+    end_point = _P(2);
+    radius = _P(3);
 
-    E = einf^e0; //Minkowski plane
-    Ae = (A^E)*E; // Remove "conformal" part from Point "A"
-    Be = (B^E)*E; // Remove "conformal" part from Point "B"
-    Ce = Be - Ae; // Euclidean direction vector from "A" to "B"
-     C = Ce + 1/2*Ce^^2*einf + e0; //Vector "Ce" in conformal
-    DrawCylinder(A,C,r);
-    [C,Ce,"Hello"] // Output(s)
+    E = einf ^ e0; // Minkowski plane
+    Ae = (start_point ^ E) * E; // Remove "conformal" part from Point "start_point"
+    Be = (end_point ^ E) * E;   // Remove "conformal" part from Point "end_point"
+    Ce = Be - Ae; 				// Euclidean direction vector from "start_point" to "end_point"
+     C = Ce + 1/2 * Ce^^2 * einf + e0; //Vector "Ce" in conformal
+    DrawCylinder(start_point, C, radius);
 }
+
 Box =
 {
-    C = _P(1);//Input 1 (Box Center Point)
-    X = _P(2);//Input 2 (Direction 1 Point)
-    Y = _P(3);//Input 3 (Direction 2 Point)
-    Z = _P(4); // Input 4 (Direction 3 Point)
+    center = _P(1); // Center Point
+    dimensions = _P(2); // list of dimensions, i.e. [x,y,z]
+	global_motor = _P(3);
+
+	// Define some constants
+	X = 1; // idx begin qt 1... without comments
+	Y = 2;
+	Z = 3;
+
+	dimensions = [
+        global_motor*VecN3(dimensions(X),0,0)*(~global_motor),
+        global_motor*VecN3(0,dimensions(Y),0)*(~global_motor),
+        global_motor*VecN3(0,0,dimensions(Z))*(~global_motor)
+	];
 
     E = einf^e0; //Minkowski plane
-    D1e = ((X-C)^E)*E;
-    D2e = ((Y-C)^E)*E;
-    D3e = ((Z-C)^E)*E;
+    D1e = ((dimensions(X)-center)^E)*E;
+    D2e = ((dimensions(Y)-center)^E)*E;
+    D3e = ((dimensions(Z)-center)^E)*E;
+
     D1 = D1e + 1/2*D1e^^2*einf + e0;
     D2 = D2e + 1/2*D2e^^2*einf + e0;
     D3 = D3e + 1/2*D3e^^2*einf + e0;
-    DrawBox(C,D1,D2,D3);
+    DrawBox(center,D1,D2,D3);
 }
-
 
 
 // Example: double pendulum
@@ -80,12 +90,9 @@ P2 = M*e0*(~M);
 
 :White;
 :P1 - 1/2*(0.15)^^2*einf;
-//:P2 - 1/2*(0.15)^^2*einf;
-Bx= M*VecN3(0.3,0,0)*(~M);
-By= M*VecN3(0,0.1,0)*(~M);
-Bz= M*VecN3(0,0,0.5)*(~M);
-::Box(P2,Bx,By,Bz);
+::Box(P2,[0.3, 0.1, 0.5], M);
 :Yellow;
+
 ?G = ::Cylinder(O,P1,0.05);
 ::Cylinder(P1,P2,0.05);
 ?G(1);
