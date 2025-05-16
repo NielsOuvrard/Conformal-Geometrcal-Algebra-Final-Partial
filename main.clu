@@ -12,7 +12,7 @@ Cylinder =
     E = einf ^ e0; // Minkowski plane
     Ae = (start_point ^ E) * E; // Remove "conformal" part from Point "start_point"
     Be = (end_point ^ E) * E;   // Remove "conformal" part from Point "end_point"
-    Ce = Be - Ae; 				// Euclidean direction vector from "start_point" to "end_point"
+    Ce = Be - Ae;               // Euclidean direction vector from "start_point" to "end_point"
      C = Ce + 1/2 * Ce^^2 * einf + e0; //Vector "Ce" in conformal
     DrawCylinder(start_point, C, radius);
 }
@@ -21,18 +21,18 @@ Box =
 {
     center = _P(1); // Center Point
     dimensions = _P(2); // list of dimensions, i.e. [x,y,z]
-	global_motor = _P(3);
+    global_motor = _P(3);
 
-	// Define some constants
-	X = 1; // idx begin qt 1... without comments
-	Y = 2;
-	Z = 3;
+    // Define some constants
+    X = 1; // idx begin qt 1... without comments
+    Y = 2;
+    Z = 3;
 
-	dimensions = [
+    dimensions = [
         global_motor * VecN3(dimensions(X), 0, 0) * (~global_motor),
         global_motor * VecN3(0, dimensions(Y), 0) * (~global_motor),
         global_motor * VecN3(0, 0, dimensions(Z)) * (~global_motor)
-	];
+    ];
 
     E = einf^e0; //Minkowski plane
     D1e = ((dimensions(X) - center) ^ E) * E;
