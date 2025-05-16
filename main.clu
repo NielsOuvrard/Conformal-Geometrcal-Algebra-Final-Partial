@@ -29,19 +29,19 @@ Box =
 	Z = 3;
 
 	dimensions = [
-        global_motor*VecN3(dimensions(X),0,0)*(~global_motor),
-        global_motor*VecN3(0,dimensions(Y),0)*(~global_motor),
-        global_motor*VecN3(0,0,dimensions(Z))*(~global_motor)
+        global_motor * VecN3(dimensions(X), 0, 0) * (~global_motor),
+        global_motor * VecN3(0, dimensions(Y), 0) * (~global_motor),
+        global_motor * VecN3(0, 0, dimensions(Z)) * (~global_motor)
 	];
 
     E = einf^e0; //Minkowski plane
-    D1e = ((dimensions(X)-center)^E)*E;
-    D2e = ((dimensions(Y)-center)^E)*E;
-    D3e = ((dimensions(Z)-center)^E)*E;
+    D1e = ((dimensions(X) - center) ^ E) * E;
+    D2e = ((dimensions(Y) - center) ^ E) * E;
+    D3e = ((dimensions(Z) - center) ^ E) * E;
 
-    D1 = D1e + 1/2*D1e^^2*einf + e0;
-    D2 = D2e + 1/2*D2e^^2*einf + e0;
-    D3 = D3e + 1/2*D3e^^2*einf + e0;
+    D1 = D1e + 1/2 * D1e^^2 * einf + e0;
+    D2 = D2e + 1/2 * D2e^^2 * einf + e0;
+    D3 = D3e + 1/2 * D3e^^2 * einf + e0;
     DrawBox(center,D1,D2,D3);
 }
 
@@ -49,52 +49,51 @@ Box =
 // Example: double pendulum
 :IPNS;
 EnableAnimate(CheckBox("Animate",0));
-if(ExecMode &  !EM_ANIMATE)
-{
+if (ExecMode & !EM_ANIMATE) {
     Data = ReadData("double_pendulum.txt");
     ?N = Size(Data);
 }
  // Number of elements in the list
-?i = round(Time*200,0)%N + 1;
-th1= Data(i,1)+Pi/2;
-th2 = Data(i,2);
+?i = round(Time * 200, 0) % N + 1;
+th1= Data(i, 1) + Pi/2;
+th2 = Data(i, 2);
 
-X = Slider("Trans. X",-5,5,0.1,0); // Global Translation Slider
-Y = Slider("Trans. Y",-5,5,0.1,0);
-Z = Slider("Trans. Z",-5,5,0.1,0);
+X = Slider("Trans. X", -5, 5, 0.1, 0); // Global Translation Slider
+Y = Slider("Trans. Y", -5, 5, 0.1, 0);
+Z = Slider("Trans. Z", -5, 5, 0.1, 0);
 
-Xrot = Slider("Rot. X",-Pi,Pi,0.1,0); // Global Rotation Sliders
-Yrot = Slider("Rot. Y",-Pi,Pi,0.1,0);
-Zrot = Slider("Rot. Z",-Pi,Pi,0.1,0);
+Xrot = Slider("Rot. X", -Pi, Pi, 0.1, 0); // Global Rotation Sliders
+Yrot = Slider("Rot. Y", -Pi, Pi, 0.1, 0);
+Zrot = Slider("Rot. Z", -Pi, Pi, 0.1, 0);
 
-Mg = TranslatorN3(X,Y,Z)*RotorN3(1,0,0,Xrot)*RotorN3(0,1,0,Yrot)*RotorN3(0,0,1,Zrot); // Global Motor
+Mg = TranslatorN3(X, Y, Z) * RotorN3(1, 0, 0, Xrot) * RotorN3(0, 1, 0, Yrot) * RotorN3(0, 0, 1, Zrot); // Global Motor
 M = Mg;
-O = M*e0*(~M) ;// Start point (origin)
-L1 = 1;// First pendulum length
+O = M * e0 * (~M); // Start point (origin)
+L1 = 1; // First pendulum length
 //th1 = Slider("Angle 1",-Pi,Pi,0.1,0); // Rotation angle 1
 
-L2 = 1.2;// Second pendulum length
+L2 = 1.2; // Second pendulum length
 //th2 = Slider("Angle 2",-Pi,Pi,0.1,0); // Rotation angle 2
 
-R1 = RotorN3(0,0,1,th1);
-T1 = TranslatorN3(0,-L1,0);
-M1 = R1*T1; // First motor
-M = M*M1; //auxiliary motor ("accumulated")
-P1 = M*e0*(~M);
+R1 = RotorN3(0, 0, 1, th1);
+T1 = TranslatorN3(0, -L1, 0);
+M1 = R1 * T1; // First motor
+M = M * M1; //auxiliary motor ("accumulated")
+P1 = M * e0 * (~M);
 
-R2 = RotorN3(0,0,1,th2);
-T2 = TranslatorN3(0,-L2,0);
-M2 = R2*T2; // Second motor
-M = M*M2; //auxiliary motor ("accumulated")
-P2 = M*e0*(~M);
+R2 = RotorN3(0, 0, 1, th2);
+T2 = TranslatorN3(0, -L2, 0);
+M2 = R2 * T2; // Second motor
+M = M * M2; //auxiliary motor ("accumulated")
+P2 = M * e0 * (~M);
 
 :White;
-:P1 - 1/2*(0.15)^^2*einf;
-::Box(P2,[0.3, 0.1, 0.5], M);
+:P1 - 1/2 * (0.15)^^2 * einf;
+::Box(P2, [0.3, 0.1, 0.5], M);
 :Yellow;
 
-?G = ::Cylinder(O,P1,0.05);
-::Cylinder(P1,P2,0.05);
+?G = ::Cylinder(O, P1, 0.05);
+::Cylinder(P1, P2, 0.05);
 ?G(1);
 
 ///////////////
