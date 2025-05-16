@@ -1,81 +1,81 @@
-// //#include "libreria.clu" // Para agregar archivo como librería
-DefVarsN3(); // Definir AGC (G_{4,1})
-DrawFrame(0.5,"axes"); // Marco de referencia
+// //#include "library.clu" // To add file as a library
+DefVarsN3(); // Define CGA (G_{4,1})
+DrawFrame(0.5,"axes"); // Reference frame
 
-//Función de cilindro "modificada"
-Cilindro =
+//Modified cylinder function
+Cylinder =
 {
-	A = _P(1);//Entrada 1 (Punto Inicial de Cilindro)
-	B = _P(2);//Entrada 2 (Punto Final de Cilindro)
-	r = _P(3);//Entrada 3 (Radio del cilindro)
+    A = _P(1);//Input 1 (Cylinder Start Point)
+    B = _P(2);//Input 2 (Cylinder End Point)
+    r = _P(3);//Input 3 (Cylinder radius)
 
-	E = einf^e0; //Plano de Minkowski
-	Ae = (A^E)*E; // Quitar parte "conformal" a Punto "A"
-	Be = (B^E)*E; // Quitar parte "conformal" a Punto "B"
-	Ce = Be - Ae; // Vector de dirección en Euclidiano que va de "A" a "B"
- 	C = Ce + 1/2*Ce^^2*einf + e0; //Vector "Ce" en conformal
-	DrawCylinder(A,C,r);
-	[C,Ce,"Hola"] // Salida(s)
+    E = einf^e0; //Minkowski plane
+    Ae = (A^E)*E; // Remove "conformal" part from Point "A"
+    Be = (B^E)*E; // Remove "conformal" part from Point "B"
+    Ce = Be - Ae; // Euclidean direction vector from "A" to "B"
+     C = Ce + 1/2*Ce^^2*einf + e0; //Vector "Ce" in conformal
+    DrawCylinder(A,C,r);
+    [C,Ce,"Hello"] // Output(s)
 }
 Box =
 {
-	C = _P(1);//Entrada 1 (Punto Centro de Caja)
-	X = _P(2);//Entrada 2 (Punto direccion 1)
-	Y = _P(3);//Entrada 3 (Punto direccion 2)
-	Z = _P(4); // Entrada 4 (Punto direccion 3)
+    C = _P(1);//Input 1 (Box Center Point)
+    X = _P(2);//Input 2 (Direction 1 Point)
+    Y = _P(3);//Input 3 (Direction 2 Point)
+    Z = _P(4); // Input 4 (Direction 3 Point)
 
-	E = einf^e0; //Plano de Minkowski
-	D1e = ((X-C)^E)*E;
-	D2e = ((Y-C)^E)*E;
-	D3e = ((Z-C)^E)*E;
-	D1 = D1e + 1/2*D1e^^2*einf + e0;
-	D2 = D2e + 1/2*D2e^^2*einf + e0;
-	D3 = D3e + 1/2*D3e^^2*einf + e0;
-	DrawBox(C,D1,D2,D3);
+    E = einf^e0; //Minkowski plane
+    D1e = ((X-C)^E)*E;
+    D2e = ((Y-C)^E)*E;
+    D3e = ((Z-C)^E)*E;
+    D1 = D1e + 1/2*D1e^^2*einf + e0;
+    D2 = D2e + 1/2*D2e^^2*einf + e0;
+    D3 = D3e + 1/2*D3e^^2*einf + e0;
+    DrawBox(C,D1,D2,D3);
 }
 
 
 
-// Ejemplo: péndulo doble
+// Example: double pendulum
 :IPNS;
-EnableAnimate(CheckBox("Animar",0));
+EnableAnimate(CheckBox("Animate",0));
 if(ExecMode &  !EM_ANIMATE)
 {
-	Data = ReadData("doble_pendulo.txt");
-	?N = Size(Data);
+    Data = ReadData("double_pendulum.txt");
+    ?N = Size(Data);
 }
- // Número de elementos de la lista
+ // Number of elements in the list
 ?i = round(Time*200,0)%N + 1;
 th1= Data(i,1)+Pi/2;
 th2 = Data(i,2);
 
-X = Slider("Tras. X",-5,5,0.1,0); // Slider de Traslación Global
-Y = Slider("Tras. Y",-5,5,0.1,0);
-Z = Slider("Tras. Z",-5,5,0.1,0);
+X = Slider("Trans. X",-5,5,0.1,0); // Global Translation Slider
+Y = Slider("Trans. Y",-5,5,0.1,0);
+Z = Slider("Trans. Z",-5,5,0.1,0);
 
-Xrot = Slider("Rot. X",-Pi,Pi,0.1,0); // Sliders de ROtación Global
+Xrot = Slider("Rot. X",-Pi,Pi,0.1,0); // Global Rotation Sliders
 Yrot = Slider("Rot. Y",-Pi,Pi,0.1,0);
 Zrot = Slider("Rot. Z",-Pi,Pi,0.1,0);
 
-Mg = TranslatorN3(X,Y,Z)*RotorN3(1,0,0,Xrot)*RotorN3(0,1,0,Yrot)*RotorN3(0,0,1,Zrot); // Motor Global
+Mg = TranslatorN3(X,Y,Z)*RotorN3(1,0,0,Xrot)*RotorN3(0,1,0,Yrot)*RotorN3(0,0,1,Zrot); // Global Motor
 M = Mg;
-O = M*e0*(~M) ;// Punto inicial (origen)
-L1 = 1;// Longitud primer péndulo
-//th1 = Slider("Ángulo 1",-Pi,Pi,0.1,0); // Ángulo de rotación 1
+O = M*e0*(~M) ;// Start point (origin)
+L1 = 1;// First pendulum length
+//th1 = Slider("Angle 1",-Pi,Pi,0.1,0); // Rotation angle 1
 
-L2 = 1.2;// Longitud segundo péndulo
-//th2 = Slider("Ángulo 2",-Pi,Pi,0.1,0); // Ángulo de rotación 2
+L2 = 1.2;// Second pendulum length
+//th2 = Slider("Angle 2",-Pi,Pi,0.1,0); // Rotation angle 2
 
 R1 = RotorN3(0,0,1,th1);
 T1 = TranslatorN3(0,-L1,0);
-M1 = R1*T1; // Primer motor
-M = M*M1; //motor auxiliar ("acumulado")
+M1 = R1*T1; // First motor
+M = M*M1; //auxiliary motor ("accumulated")
 P1 = M*e0*(~M);
 
 R2 = RotorN3(0,0,1,th2);
 T2 = TranslatorN3(0,-L2,0);
-M2 = R2*T2; // Primer motor
-M = M*M2; //motor auxiliar ("acumulado")
+M2 = R2*T2; // Second motor
+M = M*M2; //auxiliary motor ("accumulated")
 P2 = M*e0*(~M);
 
 :White;
@@ -86,25 +86,16 @@ By= M*VecN3(0,0.1,0)*(~M);
 Bz= M*VecN3(0,0,0.5)*(~M);
 ::Box(P2,Bx,By,Bz);
 :Yellow;
-?G = ::Cilindro(O,P1,0.05);
-::Cilindro(P1,P2,0.05);
+?G = ::Cylinder(O,P1,0.05);
+::Cylinder(P1,P2,0.05);
 ?G(1);
 
 ///////////////
-// Leer archivo
+// Read file
 /*
-Data = ReadData("Archivo.txt");
-?Data; // Imprime todo el archivo en una lista de listas (cada lista es un renglon)
+Data = ReadData("File.txt");
+?Data; // Prints the whole file as a list of lists (each list is a row)
 ?Data(2);
 ?Data(2,3);
 ?Data(2)(3);
 //*/
-
-
-
-
-
-
-
-
-
