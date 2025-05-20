@@ -1,108 +1,41 @@
-// //#include "library.clu" // To add file as a library
+//#include "functions.clu"
+//#include "defines.clu"
 DefVarsN3(); // Define CGA (G_{4,1})
 DrawFrame(0.5,"axes"); // Reference frame
 
-//Modified cylinder function
-Cylinder =
-{
-    start_point = _P(1);
-    end_point = _P(2);
-    radius = _P(3);
 
-    E = einf ^ e0; // Minkowski plane
-    Ae = (start_point ^ E) * E; // Remove "conformal" part from Point "start_point"
-    Be = (end_point ^ E) * E;   // Remove "conformal" part from Point "end_point"
-    Ce = Be - Ae;               // Euclidean direction vector from "start_point" to "end_point"
-     C = Ce + 1/2 * Ce^^2 * einf + e0; //Vector "Ce" in conformal
-    DrawCylinder(start_point, C, radius);
-}
-
-Box =
-{
-    center = _P(1); // Center Point
-    dimensions = _P(2); // list of dimensions, i.e. [x,y,z]
-    global_motor = _P(3);
-
-    // Define some constants
-    X = 1; // idx begin qt 1... without comments
-    Y = 2;
-    Z = 3;
-
-    dimensions = [
-        global_motor * VecN3(dimensions(X), 0, 0) * (~global_motor),
-        global_motor * VecN3(0, dimensions(Y), 0) * (~global_motor),
-        global_motor * VecN3(0, 0, dimensions(Z)) * (~global_motor)
-    ];
-
-    E = einf^e0; //Minkowski plane
-    D1e = ((dimensions(X) - center) ^ E) * E;
-    D2e = ((dimensions(Y) - center) ^ E) * E;
-    D3e = ((dimensions(Z) - center) ^ E) * E;
-
-    D1 = D1e + 1/2 * D1e^^2 * einf + e0;
-    D2 = D2e + 1/2 * D2e^^2 * einf + e0;
-    D3 = D3e + 1/2 * D3e^^2 * einf + e0;
-    DrawBox(center,D1,D2,D3);
-}
-
-ANIMATION_SPEED = 200
-
-// Example: double pendulum
 :IPNS;
 EnableAnimate(CheckBox("Animate", 0));
 if (ExecMode & !EM_ANIMATE) {
-    Data = ReadData("double_pendulum.txt");
+	Data = ReadData("datos.dat");
     ?N = Size(Data);
 }
- // Number of elements in the list
 ?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
-th1= Data(i)(1) + Pi/2;
-th2 = Data(i)(2);
+frame_data = Data(i);
 
-X = Slider("Trans. X", -5, 5, 0.1, 0); // Global Translation Slider
-Y = Slider("Trans. Y", -5, 5, 0.1, 0);
-Z = Slider("Trans. Z", -5, 5, 0.1, 0);
 
-Xrot = Slider("Rot. X", -Pi, Pi, 0.1, 0); // Global Rotation Sliders
-Yrot = Slider("Rot. Y", -Pi, Pi, 0.1, 0);
-Zrot = Slider("Rot. Z", -Pi, Pi, 0.1, 0);
-
-Mg = TranslatorN3(X, Y, Z) * RotorN3(1, 0, 0, Xrot) * RotorN3(0, 1, 0, Yrot) * RotorN3(0, 0, 1, Zrot); // Global Motor
+Mg = TranslatorN3(frame_data(ORIGIN_TRANSLATION + iX), frame_data(ORIGIN_TRANSLATION + iY), frame_data(ORIGIN_TRANSLATION + iZ))
+	 * RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + iX)) * RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + iY)) * RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + iZ)); // Global Motor
 M = Mg;
 O = M * e0 * (~M); // Start point (origin)
-L1 = 1; // First pendulum length
-//th1 = Slider("Angle 1",-Pi,Pi,0.1,0); // Rotation angle 1
 
-L2 = 1.2; // Second pendulum length
-//th2 = Slider("Angle 2",-Pi,Pi,0.1,0); // Rotation angle 2
-
-R1 = RotorN3(0, 0, 1, th1);
-T1 = TranslatorN3(0, -L1, 0);
+R1 = RotorN3(0, 0, 1, frame_data(LEG_LEFT_ROT + iZ));
+T1 = TranslatorN3(0, -FEMUR_LENGHT, 0);
 M1 = R1 * T1; // First motor
-M = M * M1; //auxiliary motor ("accumulated")
-P1 = M * e0 * (~M);
+fM = M * M1; //auxiliary motor ("accumulated")
+P1 = fM * e0 * (~fM);
 
-R2 = RotorN3(0, 0, 1, th2);
-T2 = TranslatorN3(0, -L2, 0);
+
+R2 = RotorN3(0, 0, 1, frame_data(LEG_RIGHT_ROT + iY));
+T2 = TranslatorN3(0, -TIBIAS_LENGHT, 0);
 M2 = R2 * T2; // Second motor
-M = M * M2; //auxiliary motor ("accumulated")
+M = fM * M2; //auxiliary motor ("accumulated")
 P2 = M * e0 * (~M);
 
 :White;
 :P1 - 1/2 * (0.15)^^2 * einf;
 ::Box(P2, [0.3, 0.1, 0.5], M);
+
 :Yellow;
-
-?G = ::Cylinder(O, P1, 0.05);
+::Cylinder(O, P1, 0.05);
 ::Cylinder(P1, P2, 0.05);
-?G(1);
-
-///////////////
-// Read file
-/*
-Data = ReadData("File.txt");
-?Data; // Prints the whole file as a list of lists (each list is a row)
-?Data(2);
-?Data(2,3);
-?Data(2)(3);
-//*/

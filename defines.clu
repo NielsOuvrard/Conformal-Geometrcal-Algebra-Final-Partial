@@ -1,0 +1,75 @@
+// * ////////////////////////////// Orden of the datas in the file
+// BFx BFy BFz // pos general
+ORIGIN_TRANSLATION = 1; // MG
+// BFxr BFyr BFzr
+ORIGIN_ROT = 4;
+
+// LLJxr LLJzr // rot bellybutton
+BELLYBUTTON_ROT = 10;
+// LNJxr LNJyr // rot head
+HEAD_ROT = 12;
+
+// SJLxr SJLyr SJLzr // Shoulder Left
+SHOULDER_LEFT_ROT = 14;
+// EJLxr
+ARM_LEFT_ROT = 17;
+
+// SJRxr SJRyr SJRzr // Shoulder Right
+SHOULDER_RIGHT_ROT = 18;
+// EJRxr
+ARM_RIGHT_ROT = 21;
+
+// HJLxr HJLyr HJLzr // Leg Left
+LEG_LEFT_ROT = 22;
+// KJLxr
+KNEE_LEFT_ROT = 25;
+// AJLxr AJLyr AJLzr
+FOOT_LEFT_ROT = 26;
+
+// HJRxr HJRyr HJRzr // Leg Right
+LEG_RIGHT_ROT = 29;
+// KJRxr
+KNEE_RIGHT_ROT = 30;
+// AJRxr AJRyr AJRzr 
+FOOT_RIGHT_ROT = 33;
+
+// * ////////////////////////////// Other useful defines
+
+iX = 0;
+iY = 1;
+iZ = 2;
+
+
+ANIMATION_SPEED = 200;
+
+
+/* I keep it just in case
+
+//th1 = Slider("Angle 1",-Pi,Pi,0.1,0); // Rotation angle 1
+
+//th2 = Slider("Angle 2",-Pi,Pi,0.1,0); // Rotation angle 2
+
+X = Slider("Trans. X", -5, 5, 0.1, 0); // Global Translation Slider
+Y = Slider("Trans. Y", -5, 5, 0.1, 0);
+Z = Slider("Trans. Z", -5, 5, 0.1, 0);
+
+Xrot = Slider("Rot. X", -Pi, Pi, 0.1, 0); // Global Rotation Sliders
+Yrot = Slider("Rot. Y", -Pi, Pi, 0.1, 0);
+Zrot = Slider("Rot. Z", -Pi, Pi, 0.1, 0);
+*/
+
+ZOOM = 0.4;
+
+NECK_LENGHT = 0.5 * ZOOM;
+SHOULDER_LENGHT = 1.1763 * ZOOM;
+SHOULDER_INCLINATION = 12; // 12%
+ARM_LENGHT = 2.393 * ZOOM;
+FOREARM_LENGHT = 2.500 * ZOOM;
+BACK_LENGHT = 4.094 * ZOOM;
+PELVIS_H_LENGHT = 1.198 * ZOOM;
+PELVIS_V_LENGHT = 1.867 * ZOOM;
+FEMUR_LENGHT = 3.806 * ZOOM;
+KNEE_SPACE_LENGHT = 2.079 * ZOOM;
+TIBIAS_LENGHT = 3.586 * ZOOM;
+FOOT_SPACE_LENGHT = 2.116 * ZOOM;
+FOOT_LENGHT = 0.718 * ZOOM;
