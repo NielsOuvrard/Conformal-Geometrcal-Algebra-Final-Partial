@@ -1,37 +1,37 @@
 // * ////////////////////////////// Orden of the datas in the file
 // BFx BFy BFz // pos general
-ORIGIN_TRANSLATION = 1; // MG
+ORIGIN_TRANSLATION = 1; // MG +1 because of 1-based indexing
 // BFxr BFyr BFzr
 ORIGIN_ROT = 4;
 
 // LLJxr LLJzr // rot bellybutton
-BELLYBUTTON_ROT = 10;
+BELLYBUTTON_ROT = 7;
 // LNJxr LNJyr // rot head
-HEAD_ROT = 12;
+HEAD_ROT = 9;
 
 // SJLxr SJLyr SJLzr // Shoulder Left
-SHOULDER_LEFT_ROT = 14;
+SHOULDER_LEFT_ROT = 11;
 // EJLxr
-ARM_LEFT_ROT = 17;
+ARM_LEFT_ROT = 14;
 
 // SJRxr SJRyr SJRzr // Shoulder Right
-SHOULDER_RIGHT_ROT = 18;
+SHOULDER_RIGHT_ROT = 15;
 // EJRxr
-ARM_RIGHT_ROT = 21;
+ARM_RIGHT_ROT = 18;
 
 // HJLxr HJLyr HJLzr // Leg Left
-LEG_LEFT_ROT = 22;
+LEG_LEFT_ROT = 19;
 // KJLxr
-KNEE_LEFT_ROT = 25;
+KNEE_LEFT_ROT = 20;
 // AJLxr AJLyr AJLzr
-FOOT_LEFT_ROT = 26;
+FOOT_LEFT_ROT = 23;
 
 // HJRxr HJRyr HJRzr // Leg Right
-LEG_RIGHT_ROT = 29;
+LEG_RIGHT_ROT = 26;
 // KJRxr
-KNEE_RIGHT_ROT = 30;
+KNEE_RIGHT_ROT = 29;
 // AJRxr AJRyr AJRzr 
-FOOT_RIGHT_ROT = 33;
+FOOT_RIGHT_ROT = 30;
 
 // * ////////////////////////////// Other useful defines
 
