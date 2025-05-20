@@ -7,7 +7,7 @@ DrawFrame(0.5,"axes"); // Reference frame
 :IPNS;
 EnableAnimate(CheckBox("Animate", 0));
 if (ExecMode & !EM_ANIMATE) {
-	Data = ReadData("datos.dat");
+	Data = ReadData("data.dat");
     ?N = Size(Data);
 }
 ?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
@@ -44,8 +44,8 @@ LegFromPelvis =
 	TIBIAS_LENGHT = 3.586 * ZOOM;
 
 	
-	INDEXES_FROM_LEFT_TO_RIGHT = 7;
-	LEG_ROT = 19;
+	LEG_OFFSET_FROM_LEFT_TO_RIGHT = 7;
+	PELVIS_ROT = 19;
 	KNEE_ROT = 20;
 	FOOT_ROT = 23;
 
@@ -61,9 +61,9 @@ LegFromPelvis =
 	}
 
 	// Pelvis Rotation
-	pelvis_x_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
-	pelvis_y_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
-	pelvis_z_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+	pelvis_x_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+	pelvis_y_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	pelvis_z_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
 
 	pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi, Pi, 0.1, 0);
 	pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi, Pi, 0.1, 0);
@@ -77,9 +77,9 @@ LegFromPelvis =
 	knee_point = global_motor * e0 * (~global_motor);
 
 	// Knee Rotation
-	knee_x_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
-	knee_y_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
-	knee_z_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+	knee_x_rot = frame_data(KNEE_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+	knee_y_rot = frame_data(KNEE_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	knee_z_rot = frame_data(KNEE_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
 
 	knee_x_rot = Slider("Knee Rot. X" + side, -Pi, Pi, 0.1, knee_x_rot);
 	knee_y_rot = Slider("Knee Rot. Y" + side, -Pi, Pi, 0.1, knee_y_rot);
@@ -93,9 +93,9 @@ LegFromPelvis =
 	foot_point = global_motor * e0 * (~global_motor);
 
 	// Foot Rotation
-	foot_x_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
-	foot_y_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
-	foot_z_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+	foot_x_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+	foot_y_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	foot_z_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
 
 	foot_x_rot = Slider("Foot Rot. X" + side, -Pi, Pi, 0.1, foot_x_rot);
 	foot_y_rot = Slider("Foot Rot. Y" + side, -Pi, Pi, 0.1, foot_y_rot);
@@ -114,8 +114,8 @@ LegFromPelvis =
 	} else {
 		:Blue;
 	}
-	:pelvis_point - 1/2 * (0.15)^^2 * einf; // Femur-Top
-	:knee_point - 1/2 * (0.15)^^2 * einf; // Tibias-Top
+	:pelvis_point - 1/2 * (0.15)^^2 * einf; // Pelvis
+	:knee_point - 1/2 * (0.15)^^2 * einf; // Knee
 	::Box(foot_point, FOOT_DIMENSIONS, global_motor); // Foot
 	
 	if (is_right) {
