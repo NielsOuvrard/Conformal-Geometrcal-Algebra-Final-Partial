@@ -12,7 +12,7 @@ Screenshots of the animation are provided below, of the legs part:
 ![Screenshot 1](Screenshots/Begin_of_legs.png)
 
 Screenshots of the animation are provided below, of the arms part:
-![Screenshot 2](Screenshots/begin_of_arms.png)
+![Screenshot 2](Screenshots/Begin_of_arms.png)
 
 ### Key Components
 
