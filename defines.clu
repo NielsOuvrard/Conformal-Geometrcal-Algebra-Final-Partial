@@ -35,9 +35,9 @@ FOOT_RIGHT_ROT = 30;
 
 // * ////////////////////////////// Other useful defines
 
-iX = 0;
-iY = 1;
-iZ = 2;
+X = 0;
+Y = 1;
+Z = 2;
 
 
 ANIMATION_SPEED = 200;

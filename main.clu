@@ -13,15 +13,21 @@ if (ExecMode & !EM_ANIMATE) {
 ?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
 frame_data = Data(i);
 
-global_motor = TranslatorN3(frame_data(ORIGIN_TRANSLATION + iX), frame_data(ORIGIN_TRANSLATION + iY), frame_data(ORIGIN_TRANSLATION + iZ))
-	 * RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + iX)) * RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + iY)) * RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + iZ)); // Global Motor
+global_motor = TranslatorN3(
+							frame_data(ORIGIN_TRANSLATION + X),
+							frame_data(ORIGIN_TRANSLATION + Y),
+							frame_data(ORIGIN_TRANSLATION + Z)
+							)
+			* RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + X))
+			* RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + Y))
+			* RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + Z));
 M = global_motor;
 O = M * e0 * (~M); // Start point (origin)
 
 
 LegFromPelvis =
 {
-    top_point = _P(1);
+    pelvis_point = _P(1);
     is_right = _P(2); // boolean, put 1 if right, 0 otherwise
     global_motor = _P(3);
     frame_data = _P(4);
@@ -48,34 +54,77 @@ LegFromPelvis =
 	// KNEE_SPACE_LENGHT = 2.079 * ZOOM;
 	// FOOT_SPACE_LENGHT = 2.116 * ZOOM;
 
+	if (is_right) {
+		side = " right";
+	} else {
+		side = " left";
+	}
+
+	// Pelvis Rotation
+	pelvis_x_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
+	pelvis_y_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	pelvis_z_rot = frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+
+	pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi, Pi, 0.1, 0);
+	pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi, Pi, 0.1, 0);
+	pelvis_z_rot = Slider("Pelvis Rot. Z" + side, -Pi, Pi, 0.1, 0);
 
 	// Femur
-	R1 = RotorN3(0, 0, 1, frame_data(LEG_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z));
-	T1 = TranslatorN3(0, -FEMUR_LENGHT, 0);
-	global_motor_1 = R1 * T1; // First motor
-	global_motor = global_motor * global_motor_1; //auxiliary motor ("accumulated")
-	P1 = global_motor * e0 * (~global_motor);
+	rotor_x = RotorN3(1, 0, 0, pelvis_x_rot);
+	rotor_y = RotorN3(0, 1, 0, pelvis_y_rot);
+	rotor_z = RotorN3(0, 0, 1, pelvis_z_rot);
+	global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -FEMUR_LENGHT, 0)); //auxiliary motor ("accumulated")
+	knee_point = global_motor * e0 * (~global_motor);
+
+	// Knee Rotation
+	knee_x_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
+	knee_y_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	knee_z_rot = frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+
+	knee_x_rot = Slider("Knee Rot. X" + side, -Pi, Pi, 0.1, knee_x_rot);
+	knee_y_rot = Slider("Knee Rot. Y" + side, -Pi, Pi, 0.1, knee_y_rot);
+	knee_z_rot = Slider("Knee Rot. Z" + side, -Pi, Pi, 0.1, knee_z_rot);
 
 	// Tibias
-	R2 = RotorN3(0, 0, 1, frame_data(KNEE_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z));
-	T2 = TranslatorN3(0, -TIBIAS_LENGHT, 0);
-	global_motor_2 = R2 * T2; // Second motor
-	global_motor = global_motor * global_motor_2; //auxiliary motor ("accumulated")
-	P2 = global_motor * e0 * (~global_motor);
+	rotor_x = RotorN3(1, 0, 0, knee_x_rot);
+	rotor_y = RotorN3(0, 1, 0, knee_y_rot);
+	rotor_z = RotorN3(0, 0, 1, knee_z_rot);
+	global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -TIBIAS_LENGHT, 0)); //auxiliary motor ("accumulated")
+	foot_point = global_motor * e0 * (~global_motor);
+
+	// Foot Rotation
+	foot_x_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + X);
+	foot_y_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Y);
+	foot_z_rot = frame_data(FOOT_ROT + (INDEXES_FROM_LEFT_TO_RIGHT * is_right) + Z);
+
+	foot_x_rot = Slider("Foot Rot. X" + side, -Pi, Pi, 0.1, foot_x_rot);
+	foot_y_rot = Slider("Foot Rot. Y" + side, -Pi, Pi, 0.1, foot_y_rot);
+	foot_z_rot = Slider("Foot Rot. Z" + side, -Pi, Pi, 0.1, foot_z_rot);
+
+	// Foot
+	rotor_x = RotorN3(1, 0, 0, foot_x_rot);
+	rotor_y = RotorN3(0, 1, 0, foot_y_rot);
+	rotor_z = RotorN3(0, 0, 1, foot_z_rot);
+	global_motor = global_motor * (rotor_x * rotor_y * rotor_z); //auxiliary motor ("accumulated")
+
 
 	// Draw
-	:White;
-	:top_point - 1/2 * (0.15)^^2 * einf; // Femur-Top
-	:P1 - 1/2 * (0.15)^^2 * einf; // Tibias-Top
-	::Box(P2, FOOT_DIMENSIONS, global_motor); // Foot
+	if (is_right) {
+		:White;
+	} else {
+		:Blue;
+	}
+	:pelvis_point - 1/2 * (0.15)^^2 * einf; // Femur-Top
+	:knee_point - 1/2 * (0.15)^^2 * einf; // Tibias-Top
+	::Box(foot_point, FOOT_DIMENSIONS, global_motor); // Foot
 	
 	if (is_right) {
 		:Yellow;
 	} else {
 		:Magenta;
 	}
-	::Cylinder(top_point, P1, 0.05); // Femur
-	::Cylinder(P1, P2, 0.05); // Tibias
+	::Cylinder(pelvis_point, knee_point, 0.05); // Femur
+	::Cylinder(knee_point, foot_point, 0.05); // Tibias
 }
 
 ArmFromSternum =
@@ -93,9 +142,12 @@ ArmFromSternum =
 
 }
 
-leg_global_motor = TranslatorN3(PELVIS_V_LENGHT, 0, 0);
-::LegFromPelvis(O * (leg_global_motor / 2), false, global_motor, frame_data); // left
-::LegFromPelvis(O * -(leg_global_motor / 2), true, global_motor, frame_data); // right
+leg_global_motor_r = TranslatorN3(-(PELVIS_V_LENGHT / 2), 0, 0);
+leg_global_motor_l = TranslatorN3((PELVIS_V_LENGHT / 2), 0, 0);
+leg_r_motor = global_motor * leg_global_motor_r;
+leg_l_motor = global_motor * leg_global_motor_l;
+::LegFromPelvis(leg_l_motor * e0 * (~leg_l_motor), false, leg_l_motor, frame_data); // left
+::LegFromPelvis(leg_r_motor * e0 * (~leg_r_motor), true, leg_r_motor, frame_data); // right
 
 
 //   | y
