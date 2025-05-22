@@ -9,7 +9,7 @@ DrawFrame(0.5,"axes"); // Reference frame
 :IPNS;
 EnableAnimate(CheckBox("Animate", 0));
 if (ExecMode & !EM_ANIMATE) {
-	Data = ReadData("data.dat");
+	Data = ReadData("../data/data.dat");
     ?N = Size(Data);
 }
 ?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing

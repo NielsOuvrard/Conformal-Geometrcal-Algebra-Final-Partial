@@ -21,7 +21,7 @@ Box =
     global_motor = _P(3);
 
     // Define some constants
-    X = 1; // idx begin qt 1... without comments
+    X = 1; // +1 because of 1-based indexing
     Y = 2;
     Z = 3;
 
