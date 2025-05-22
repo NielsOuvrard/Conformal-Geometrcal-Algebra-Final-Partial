@@ -22,7 +22,7 @@ ARM_RIGHT_ROT = 18;
 // HJLxr HJLyr HJLzr // Leg Left
 LEG_LEFT_ROT = 19;
 // KJLxr
-KNEE_LEFT_ROT = 20;
+KNEE_LEFT_ROT = 22;
 // AJLxr AJLyr AJLzr
 FOOT_LEFT_ROT = 23;
 

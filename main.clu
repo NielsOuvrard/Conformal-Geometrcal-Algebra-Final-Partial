@@ -27,18 +27,18 @@ M = global_motor;
 O = M * e0 * (~M); // Start point (origin)
 
 
-/* Uncomment this for legs part
-
 leg_global_motor_r = TranslatorN3(-(PELVIS_V_LENGHT / 2), 0, 0);
 leg_global_motor_l = TranslatorN3((PELVIS_V_LENGHT / 2), 0, 0);
 leg_r_motor = global_motor * leg_global_motor_r;
 leg_l_motor = global_motor * leg_global_motor_l;
 ::LegFromPelvis(leg_l_motor * e0 * (~leg_l_motor), false, leg_l_motor, frame_data); // left
 ::LegFromPelvis(leg_r_motor * e0 * (~leg_r_motor), true, leg_r_motor, frame_data); // right
-*/
 
-::ArmFromSternum(O, true, global_motor, frame_data);
-::ArmFromSternum(O, false, global_motor, frame_data);
+arms_global_motor = TranslatorN3(0, PELVIS_H_LENGHT + BACK_LENGHT, 0);
+arm_motor = global_motor * arms_global_motor;
+
+::ArmFromSternum(arm_motor * e0 * (~arm_motor), true, arm_motor, frame_data);
+::ArmFromSternum(arm_motor * e0 * (~arm_motor), false, arm_motor, frame_data);
 
 
 // Create torso
