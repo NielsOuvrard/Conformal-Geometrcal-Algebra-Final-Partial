@@ -8,6 +8,9 @@ Animate a body skeleton using Conformal Geometrical Algebra (CGA). This project 
 
 The main animation logic is implemented in [`main.clu`](main.clu). The code uses Conformal Geometric Algebra (CGA) to represent and animate a human skeleton, on the legs and pelvis (so far). The animation is driven by data loaded from `data.dat`, which contains the pose information for an animation of 602 frames.
 
+Screenshots of the animation are provided below, with leg and arm parts.
+![Screenshot 1](Screenshots/Arms_and_legs.png)
+
 Screenshots of the animation are provided below, of the legs part:
 ![Screenshot 1](Screenshots/Begin_of_legs.png)
 
