@@ -6,6 +6,7 @@ ArmFromSternum =
     is_right = _P(2); // boolean
     global_motor = _P(3);
     frame_data = _P(4);
+	is_animate = _P(5);
 
 	// write a sphere - cylinder - sphere - cylinder - box
 
@@ -28,24 +29,38 @@ ArmFromSternum =
 
 	// Clavicle
 	if (is_right) {
-		side = " right";
 		clavicle_rotor = RotorN3(0, 0, 1, (CLAVILCLE_INCLINATION / 100) * (Pi / 2));
 		global_motor = global_motor * (clavicle_rotor * TranslatorN3(-CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
 	} else {
-		side = " left";
 		clavicle_rotor = RotorN3(0, 0, 1, (-CLAVILCLE_INCLINATION / 100) * (Pi / 2));
 		global_motor = global_motor * (clavicle_rotor * TranslatorN3(CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
 	}
 	shoulder_point = global_motor * e0 * (~global_motor);
 
-	// Shoulder Rotation
-	shoulder_x_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-	shoulder_y_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
-	shoulder_z_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
 
-	// shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi, 0.1, 0);
-	// shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi, Pi, 0.1, 0);
-	// shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi, 0.1, 0);
+	if (is_animate) {
+		// Shoulder Rotation
+		shoulder_x_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+		shoulder_y_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+		shoulder_z_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
+		
+		// Elbow Rotation
+		elbow_x_rot = frame_data(ELBOW_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+	} else {
+		if (is_right) {
+			side = " right";
+		} else {
+			side = " left";
+		}
+		// Shoulder Rotation
+		shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi, 0.1, 0);
+		shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi, Pi, 0.1, 0);
+		shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi, 0.1, 0);
+
+		// Elbow Rotation
+		elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, Pi, 0.1, 0);
+
+	}
 
 	// Humerus
 	rotor_x = RotorN3(1, 0, 0, shoulder_x_rot);
@@ -54,17 +69,10 @@ ArmFromSternum =
 	global_motor = global_motor * (rotor_x * (~clavicle_rotor) * rotor_y * rotor_z * TranslatorN3(0, -HUMERUS_LENGHT, 0)); //auxiliary motor ("accumulated")
 	elbow_point = global_motor * e0 * (~global_motor);
 
-
-	// Elbow Rotation
-	elbow_x_rot = frame_data(ELBOW_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-
-	// elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, Pi, 0.1, 0);
-
 	// Humerus
 	rotor_x = RotorN3(1, 0, 0, elbow_x_rot);
 	global_motor = global_motor * (rotor_x * TranslatorN3(0, -ULNARADIUS_LENGHT, 0)); //auxiliary motor ("accumulated")
 	hand_point = global_motor * e0 * (~global_motor);
-
 
 
 	// Draw
