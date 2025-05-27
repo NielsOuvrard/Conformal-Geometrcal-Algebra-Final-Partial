@@ -1,6 +1,7 @@
 //#include "functions.clu"
 //#include "defines.clu"
 //#include "arm_from_sternum.clu"
+//#include "head_from_sternum.clu"
 //#include "leg_from_pelvis.clu"
 DefVarsN3(); // Define CGA (G_{4,1})
 DrawFrame(0.5,"axes"); // Reference frame
@@ -35,12 +36,14 @@ leg_l_motor = global_motor * leg_global_motor_l;
 ::LegFromPelvis(leg_l_motor * e0 * (~leg_l_motor), false, leg_l_motor, frame_data, is_animate); // left
 ::LegFromPelvis(leg_r_motor * e0 * (~leg_r_motor), true, leg_r_motor, frame_data, is_animate); // right
 
-arms_global_motor = TranslatorN3(0, PELVIS_H_LENGHT + BACK_LENGHT, 0);
-arm_motor = global_motor * arms_global_motor;
+from_sternum_global_motor = TranslatorN3(0, PELVIS_H_LENGHT + BACK_LENGHT, 0);
+sternum_motor = global_motor * from_sternum_global_motor;
 
-::ArmFromSternum(arm_motor * e0 * (~arm_motor), true, arm_motor, frame_data, is_animate);
-::ArmFromSternum(arm_motor * e0 * (~arm_motor), false, arm_motor, frame_data, is_animate);
+::ArmFromSternum(sternum_motor * e0 * (~sternum_motor), true, sternum_motor, frame_data, is_animate);
+::ArmFromSternum(sternum_motor * e0 * (~sternum_motor), false, sternum_motor, frame_data, is_animate);
 
+
+::HeadFromSternum(sternum_motor * e0 * (~sternum_motor), sternum_motor, frame_data, is_animate)
 
 // Create torso
 
