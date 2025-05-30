@@ -31,8 +31,8 @@ HeadFromSternum =
 		head_x_rot = frame_data(HEAD_ROT + X);
 		head_y_rot = frame_data(HEAD_ROT + Y);
 	} else {
-		head_x_rot = Slider("Head Rot. X" + side, -Pi, Pi, 0.1, 0);
-		head_y_rot = Slider("Head Rot. Y" + side, -Pi, Pi, 0.1, 0);
+		head_x_rot = Slider("Head Rot. X" + side, -Pi/9, Pi/9, 0.1, 0);
+		head_y_rot = Slider("Head Rot. Y" + side, -Pi/4, Pi/4, 0.1, 0);
 	}
 
 	// Head

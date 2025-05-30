@@ -1,0 +1,85 @@
+TorsoFromOrigin =
+{
+    origin_point = _P(1);
+    global_motor = _P(2);
+    frame_data = _P(3);
+    is_animate = _P(4);
+
+    // Define constants
+    X = 0;
+    Z = 1; // Z is at index 1 in this dataset, as Y is omitted.
+
+    ZOOM = 0.4;
+    
+    // Torso dimensions
+	PELVIS_H_LENGTH = 1.198 * ZOOM;  // Height of pelvis
+    PELVIS_V_LENGTH = 1.867 * ZOOM;  // Width of pelvis
+    BACK_LENGTH = 4.094 * ZOOM;      // Length of back/spine
+    
+    // Rotation indices
+    BELLYBUTTON_ROT = 7;
+
+    // Get rotation values
+    if (is_animate) {
+        bellybutton_x_rot = frame_data(BELLYBUTTON_ROT + X);
+        bellybutton_z_rot = frame_data(BELLYBUTTON_ROT + Z);
+    } else {
+        bellybutton_x_rot = Slider("Bellybutton Rot. X", -Pi/6, Pi/2, 0.1, 0);
+        bellybutton_z_rot = Slider("Bellybutton Rot. Z", -Pi/6, Pi/6, 0.1, 0);
+	}
+	
+	bellybutton_base_motor = global_motor
+                        * TranslatorN3(0, PELVIS_H_LENGTH/2, 0);
+	
+    // Apply bellybutton rotations (2 DOF)
+	rotor_x = RotorN3(1, 0, 0, bellybutton_x_rot);
+    rotor_z = RotorN3(0, 0, 1, bellybutton_z_rot);
+    
+    // Create motor for upper body movement
+    upper_body_motor = bellybutton_base_motor * rotor_x * rotor_z;
+    
+    // Calculate key points
+    pelvis_center = origin_point;
+    
+    // Bellybutton point (middle of torso)
+    bellybutton_motor = upper_body_motor * TranslatorN3(0, PELVIS_H_LENGTH/2, 0);
+    bellybutton_point = bellybutton_base_motor * e0 * (~bellybutton_base_motor);
+    
+    // Sternum point (top of torso)
+    sternum_motor = upper_body_motor
+              * TranslatorN3(0, PELVIS_H_LENGTH/2 + BACK_LENGTH, 0);
+	sternum_point = sternum_motor * e0 * (~sternum_motor);
+    
+    // Hip connection points for legs
+    hip_left_motor = global_motor * TranslatorN3(PELVIS_V_LENGTH/2, 0, 0);
+    hip_left_point = hip_left_motor * e0 * (~hip_left_motor);
+    
+    hip_right_motor = global_motor * TranslatorN3(-PELVIS_V_LENGTH/2, 0, 0);
+    hip_right_point = hip_right_motor * e0 * (~hip_right_motor);
+
+    // Draw torso structure
+    :Red;
+    // Pelvis (horizontal bar)
+    ::Cylinder(hip_left_point, hip_right_point, 0.08);
+    
+    // Pelvis joints
+    :White;
+    :hip_left_point - 1/2 * (0.12)^^2 * einf;
+    :hip_right_point - 1/2 * (0.12)^^2 * einf;
+    
+    // Spine/Back
+    :Cyan;
+    ::Cylinder(pelvis_center, bellybutton_point, 0.10);
+    ::Cylinder(bellybutton_point, sternum_point, 0.10);
+    
+    // Bellybutton joint
+    :Yellow;
+    :bellybutton_point - 1/2 * (0.15)^^2 * einf;
+    
+    // Sternum joint
+    :Red;
+    :sternum_point - 1/2 * (0.18)^^2 * einf;
+    
+    // Return important points and motors
+    [hip_left_point, hip_right_point, sternum_point, hip_left_motor, hip_right_motor, sternum_motor]
+}
