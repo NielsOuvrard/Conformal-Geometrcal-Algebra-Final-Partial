@@ -7,8 +7,7 @@ TorsoFromOrigin =
 
     // Define constants
     X = 0;
-    Y = 1;
-    Z = 2;
+    Z = 1; //We are not using Y
 
     ZOOM = 0.4;
     
