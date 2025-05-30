@@ -53,12 +53,12 @@ ArmFromSternum =
 			side = " left";
 		}
 		// Shoulder Rotation
-		shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi, 0.1, 0);
-		shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi, Pi, 0.1, 0);
-		shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi, 0.1, 0);
+		shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi/2, 0.1, 0);
+		shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi/3, Pi/3, 0.1, 0);
+		shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi/9, 0.1, 0);
 
 		// Elbow Rotation
-		elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, Pi, 0.1, 0);
+		elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, 0, 0.1, 0);
 
 	}
 

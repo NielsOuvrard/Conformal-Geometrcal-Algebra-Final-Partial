@@ -1,5 +1,6 @@
 //#include "functions.clu"
 //#include "defines.clu"
+//#include "torso_from_origin.clu"
 //#include "arm_from_sternum.clu"
 //#include "head_from_sternum.clu"
 //#include "leg_from_pelvis.clu"
@@ -28,29 +29,23 @@ global_motor = TranslatorN3(
 M = global_motor;
 O = M * e0 * (~M); // Start point (origin)
 
+// Create torso and get connection points
+torso_result = ::TorsoFromOrigin(O, global_motor, frame_data, is_animate);
+hip_left_point = torso_result(1);
+hip_right_point = torso_result(2);
+sternum_point = torso_result(3);
+upper_body_motor = torso_result(4);
+hip_left_motor = torso_result(5);
+hip_right_motor = torso_result(6);
+sternum_motor = torso_result(7);
 
-leg_global_motor_r = TranslatorN3(-(PELVIS_V_LENGHT / 2), 0, 0);
-leg_global_motor_l = TranslatorN3((PELVIS_V_LENGHT / 2), 0, 0);
-leg_r_motor = global_motor * leg_global_motor_r;
-leg_l_motor = global_motor * leg_global_motor_l;
-::LegFromPelvis(leg_l_motor * e0 * (~leg_l_motor), false, leg_l_motor, frame_data, is_animate); // left
-::LegFromPelvis(leg_r_motor * e0 * (~leg_r_motor), true, leg_r_motor, frame_data, is_animate); // right
+// Create legs from hip points
+::LegFromPelvis(hip_left_point, false, hip_left_motor, frame_data, is_animate); // left
+::LegFromPelvis(hip_right_point, true, hip_right_motor, frame_data, is_animate); // right
 
-from_sternum_global_motor = TranslatorN3(0, PELVIS_H_LENGHT + BACK_LENGHT, 0);
-sternum_motor = global_motor * from_sternum_global_motor;
+// Create arms from sternum (using upper body motor for proper rotation)
+::ArmFromSternum(sternum_point, true, sternum_motor, frame_data, is_animate);
+::ArmFromSternum(sternum_point, false, sternum_motor, frame_data, is_animate);
 
-::ArmFromSternum(sternum_motor * e0 * (~sternum_motor), true, sternum_motor, frame_data, is_animate);
-::ArmFromSternum(sternum_motor * e0 * (~sternum_motor), false, sternum_motor, frame_data, is_animate);
-
-
-::HeadFromSternum(sternum_motor * e0 * (~sternum_motor), sternum_motor, frame_data, is_animate)
-
-// Create torso
-
-
-//   | y
-// /z -x
-
-// e1 = x
-// e2 = y
-// e3 = z
+// Create head from sternum
+::HeadFromSternum(sternum_point, sternum_motor, frame_data, is_animate)

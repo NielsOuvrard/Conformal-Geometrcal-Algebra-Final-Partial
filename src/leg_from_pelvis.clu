@@ -24,7 +24,7 @@ LegFromPelvis =
 	FOOT_ROT = 23;
 
 	FOOT_LENGHT = 0.718 * ZOOM;
-	FOOT_DIMENSIONS = [FOOT_LENGHT * 3.0, FOOT_LENGHT, FOOT_LENGHT * 5.0];
+	FOOT_DIMENSIONS = [FOOT_LENGHT * 2.0, FOOT_LENGHT, FOOT_LENGHT * 4.0];
 	// KNEE_SPACE_LENGHT = 2.079 * ZOOM;
 	// FOOT_SPACE_LENGHT = 2.116 * ZOOM;
 
@@ -47,15 +47,15 @@ LegFromPelvis =
 			side = " left";
 		}
 		// Pelvis Rotation
-		pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi, Pi, 0.1, 0);
-		pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi, Pi, 0.1, 0);
-		pelvis_z_rot = Slider("Pelvis Rot. Z" + side, -Pi, Pi, 0.1, 0);
+		pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi/2, Pi/2, 0.1, 0);
+		pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
+		pelvis_z_rot = Slider("Pelvis Rot. Z" + side, -Pi/9, Pi/3, 0.1, 0);
 		// Knee Rotation
-		knee_rot = Slider("Knee Rot. X" + side, -Pi, Pi, 0.1, 0);
+		knee_rot = Slider("Knee Rot. X" + side, 0, Pi/2, 0.1, 0);
 		// Foot Rotation
-		foot_x_rot = Slider("Foot Rot. X" + side, -Pi, Pi, 0.1, 0);
-		foot_y_rot = Slider("Foot Rot. Y" + side, -Pi, Pi, 0.1, 0);
-		foot_z_rot = Slider("Foot Rot. Z" + side, -Pi, Pi, 0.1, 0);
+		foot_x_rot = Slider("Foot Rot. X" + side, -Pi/4, Pi/4, 0.1, 0);
+		foot_y_rot = Slider("Foot Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
+		foot_z_rot = Slider("Foot Rot. Z" + side, -Pi/9, Pi/9, 0.1, 0);
 	}
 
 	// Femur
