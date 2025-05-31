@@ -1,96 +1,129 @@
-
-
 ArmFromSternum =
 {
     sternum_point = _P(1);
     is_right = _P(2); // boolean
     global_motor = _P(3);
     frame_data = _P(4);
-	is_animate = _P(5);
-
-	// write a sphere - cylinder - sphere - cylinder - box
+    is_animate = _P(5);
 
     // Define some constants
     X = 0;
     Y = 1;
     Z = 2;
 
-	ARM_OFFSET_FROM_LEFT_TO_RIGHT = 4;
-	SHOULDER_ROT = 11;
-	ELBOW_ROT = 14;
+    ARM_OFFSET_FROM_LEFT_TO_RIGHT = 4;
+    SHOULDER_ROT = 11;
+    ELBOW_ROT = 14;
 
-	ZOOM = 0.4;
+    ZOOM = 0.4;
 
-	CLAVILCLE_LENGHT = 1.763 * ZOOM;
-	CLAVILCLE_INCLINATION = 12; // 12%
-	HUMERUS_LENGHT = 2.393 * ZOOM;
-	ULNARADIUS_LENGHT = 2.500 * ZOOM;
+    CLAVILCLE_LENGHT = 1.763 * ZOOM;
+    CLAVILCLE_INCLINATION = 12; // 12%
+    HUMERUS_LENGHT = 2.393 * ZOOM;
+    ULNARADIUS_LENGHT = 2.500 * ZOOM;
 
+    // Clavicle
+    if (is_right) {
+        clavicle_rotor = RotorN3(0, 0, 1, (CLAVILCLE_INCLINATION / 100) * (Pi / 2));
+        global_motor = global_motor * (clavicle_rotor * TranslatorN3(-CLAVILCLE_LENGHT, 0, 0)); // auxiliary motor ("accumulated")
+    } else {
+        clavicle_rotor = RotorN3(0, 0, 1, (-CLAVILCLE_INCLINATION / 100) * (Pi / 2));
+        global_motor = global_motor * (clavicle_rotor * TranslatorN3(CLAVILCLE_LENGHT, 0, 0)); // auxiliary motor ("accumulated")
+    }
+    shoulder_point = global_motor * e0 * (~global_motor);
 
-	// Clavicle
-	if (is_right) {
-		clavicle_rotor = RotorN3(0, 0, 1, (CLAVILCLE_INCLINATION / 100) * (Pi / 2));
-		global_motor = global_motor * (clavicle_rotor * TranslatorN3(-CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
-	} else {
-		clavicle_rotor = RotorN3(0, 0, 1, (-CLAVILCLE_INCLINATION / 100) * (Pi / 2));
-		global_motor = global_motor * (clavicle_rotor * TranslatorN3(CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
-	}
-	shoulder_point = global_motor * e0 * (~global_motor);
+    if (is_animate) {
+        // Shoulder Rotation
+        shoulder_x_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+        shoulder_y_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+        shoulder_z_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
 
+        // Elbow Rotation
+        elbow_x_rot = frame_data(ELBOW_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+    } else {
+        if (is_right) {
+            side = " right";
+        } else {
+            side = " left";
+        }
+        // Shoulder Rotation
+        shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi/2, 0.1, 0);
+        shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi/3, Pi/3, 0.1, 0);
+        shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi/9, 0.1, 0);
 
-	if (is_animate) {
-		// Shoulder Rotation
-		shoulder_x_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-		shoulder_y_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
-		shoulder_z_rot = frame_data(SHOULDER_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
-		
-		// Elbow Rotation
-		elbow_x_rot = frame_data(ELBOW_ROT + (ARM_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-	} else {
-		if (is_right) {
-			side = " right";
-		} else {
-			side = " left";
-		}
-		// Shoulder Rotation
-		shoulder_x_rot = Slider("Shoulder Rot. X" + side, -Pi, Pi/2, 0.1, 0);
-		shoulder_y_rot = Slider("Shoulder Rot. Y" + side, -Pi/3, Pi/3, 0.1, 0);
-		shoulder_z_rot = Slider("Shoulder Rot. Z" + side, -Pi, Pi/9, 0.1, 0);
+        // Elbow Rotation
+        elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, 0, 0.1, 0);
+    }
 
-		// Elbow Rotation
-		elbow_x_rot = Slider("Elbow Rot. X" + side, -Pi, 0, 0.1, 0);
+    // Humerus
+    rotor_x = RotorN3(1, 0, 0, shoulder_x_rot);
+    rotor_y = RotorN3(0, 1, 0, shoulder_y_rot);
+    rotor_z = RotorN3(0, 0, 1, shoulder_z_rot);
+    global_motor = global_motor * (rotor_x * (~clavicle_rotor) * rotor_y * rotor_z * TranslatorN3(0, -HUMERUS_LENGHT, 0)); // auxiliary motor ("accumulated")
+    elbow_point = global_motor * e0 * (~global_motor);
 
-	}
+    // UlnaRadius (Forearm)
+    rotor_x = RotorN3(1, 0, 0, elbow_x_rot);
+    global_motor = global_motor * (rotor_x * TranslatorN3(0, -ULNARADIUS_LENGHT, 0)); // auxiliary motor ("accumulated")
+    hand_point = global_motor * e0 * (~global_motor);
 
-	// Humerus
-	rotor_x = RotorN3(1, 0, 0, shoulder_x_rot);
-	rotor_y = RotorN3(0, 1, 0, shoulder_y_rot);
-	rotor_z = RotorN3(0, 0, 1, shoulder_z_rot);
-	global_motor = global_motor * (rotor_x * (~clavicle_rotor) * rotor_y * rotor_z * TranslatorN3(0, -HUMERUS_LENGHT, 0)); //auxiliary motor ("accumulated")
-	elbow_point = global_motor * e0 * (~global_motor);
+    // Draw
+    if (is_right) {
+        :White;
+    } else {
+        :Blue;
+    }
+    :shoulder_point - 1/2 * (0.15)^^2 * einf; // Shoulder
+    :elbow_point - 1/2 * (0.15)^^2 * einf; // Elbow
+    ::Box(hand_point, [0.3, 0.3, 0.3], global_motor); // hand
 
-	// Humerus
-	rotor_x = RotorN3(1, 0, 0, elbow_x_rot);
-	global_motor = global_motor * (rotor_x * TranslatorN3(0, -ULNARADIUS_LENGHT, 0)); //auxiliary motor ("accumulated")
-	hand_point = global_motor * e0 * (~global_motor);
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Cylinder(sternum_point, shoulder_point, 0.05); // Clavicle
+    ::Cylinder(shoulder_point, elbow_point, 0.05); // Humerus
+    ::Cylinder(elbow_point, hand_point, 0.05); // UlnaRadius
 
+    // Fingers
+    finger_size = [0.05, 0.08, 0.2]; // width, height, length
+    finger_spacing = 0.12;
+    finger_rotor = RotorN3(1, 0, 0, -Pi/2);
 
-	// Draw
-	if (is_right) {
-		:White;
-	} else {
-		:Blue;
-	}
-	:shoulder_point - 1/2 * (0.15)^^2 * einf; // Shoulder
-	:elbow_point - 1/2 * (0.15)^^2 * einf; // Elbow
-	::Box(hand_point, [0.3, 0.3, 0.3], global_motor); // hand
-	
-	if (is_right) {
-		:Yellow;
-	} else {
-		:Magenta;
-	}
-	::Cylinder(sternum_point, shoulder_point, 0.05); // Clavicle
-	::Cylinder(shoulder_point, elbow_point, 0.05); // Humerus
-	::Cylinder(elbow_point, hand_point, 0.05); // UlnaRadius
+    // Left finger
+    finger_offset_1 = TranslatorN3(-finger_spacing, -0.2, 0);
+    finger_motor_1 = global_motor * finger_offset_1 * finger_rotor;
+    finger_pos_1 = finger_motor_1 * e0 * ~finger_motor_1;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_1, finger_size, finger_motor_1);
+
+    // Middle finger
+    finger_offset_2 = TranslatorN3(0, -0.2, 0);
+    finger_motor_2 = global_motor * finger_offset_2 * finger_rotor;
+    finger_pos_2 = finger_motor_2 * e0 * ~finger_motor_2;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_2, finger_size, finger_motor_2);
+
+    // Right finger
+    finger_offset_3 = TranslatorN3(finger_spacing, -0.2, 0);
+    finger_motor_3 = global_motor * finger_offset_3 * finger_rotor;
+    finger_pos_3 = finger_motor_3 * e0 * ~finger_motor_3;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_3, finger_size, finger_motor_3);
 }
