@@ -42,22 +42,6 @@ Z = 2;
 
 ANIMATION_SPEED = 200;
 
-
-/* I keep it just in case
-
-//th1 = Slider("Angle 1",-Pi,Pi,0.1,0); // Rotation angle 1
-
-//th2 = Slider("Angle 2",-Pi,Pi,0.1,0); // Rotation angle 2
-
-X = Slider("Trans. X", -5, 5, 0.1, 0); // Global Translation Slider
-Y = Slider("Trans. Y", -5, 5, 0.1, 0);
-Z = Slider("Trans. Z", -5, 5, 0.1, 0);
-
-Xrot = Slider("Rot. X", -Pi, Pi, 0.1, 0); // Global Rotation Sliders
-Yrot = Slider("Rot. Y", -Pi, Pi, 0.1, 0);
-Zrot = Slider("Rot. Z", -Pi, Pi, 0.1, 0);
-*/
-
 ZOOM = 0.4;
 
 NECK_LENGHT = 0.5 * ZOOM;

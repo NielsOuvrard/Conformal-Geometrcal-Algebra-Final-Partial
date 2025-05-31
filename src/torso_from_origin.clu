@@ -12,7 +12,7 @@ TorsoFromOrigin =
     ZOOM = 0.4;
     
     // Torso dimensions
-	PELVIS_H_LENGTH = 1.198 * ZOOM;  // Height of pelvis
+    PELVIS_H_LENGTH = 1.198 * ZOOM;  // Height of pelvis
     PELVIS_V_LENGTH = 1.867 * ZOOM;  // Width of pelvis
     BACK_LENGTH = 4.094 * ZOOM;      // Length of back/spine
     
@@ -26,13 +26,13 @@ TorsoFromOrigin =
     } else {
         bellybutton_x_rot = Slider("Bellybutton Rot. X", -Pi/6, Pi/2, 0.1, 0);
         bellybutton_z_rot = Slider("Bellybutton Rot. Z", -Pi/6, Pi/6, 0.1, 0);
-	}
-	
-	bellybutton_base_motor = global_motor
+    }
+    
+    bellybutton_base_motor = global_motor
                         * TranslatorN3(0, PELVIS_H_LENGTH/2, 0);
-	
+    
     // Apply bellybutton rotations (2 DOF)
-	rotor_x = RotorN3(1, 0, 0, bellybutton_x_rot);
+    rotor_x = RotorN3(1, 0, 0, bellybutton_x_rot);
     rotor_z = RotorN3(0, 0, 1, bellybutton_z_rot);
     
     // Create motor for upper body movement
@@ -48,7 +48,7 @@ TorsoFromOrigin =
     // Sternum point (top of torso)
     sternum_motor = upper_body_motor
               * TranslatorN3(0, PELVIS_H_LENGTH/2 + BACK_LENGTH, 0);
-	sternum_point = sternum_motor * e0 * (~sternum_motor);
+    sternum_point = sternum_motor * e0 * (~sternum_motor);
     
     // Hip connection points for legs
     hip_left_motor = global_motor * TranslatorN3(PELVIS_V_LENGTH/2, 0, 0);

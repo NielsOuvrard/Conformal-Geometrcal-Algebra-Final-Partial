@@ -4,93 +4,93 @@ LegFromPelvis =
     is_right = _P(2); // boolean, put 1 if right, 0 otherwise
     global_motor = _P(3);
     frame_data = _P(4);
-	is_animate = _P(5);
+    is_animate = _P(5);
 
-	// write a sphere - cylinder - sphere - cylinder - box
+    // write a sphere - cylinder - sphere - cylinder - box
     X = 0;
     Y = 1;
     Z = 2;
 
-	ZOOM = 0.4;
+    ZOOM = 0.4;
 
     // Define some constants
-	FEMUR_LENGHT = 3.806 * ZOOM;
-	TIBIAS_LENGHT = 3.586 * ZOOM;
+    FEMUR_LENGHT = 3.806 * ZOOM;
+    TIBIAS_LENGHT = 3.586 * ZOOM;
 
-	
-	LEG_OFFSET_FROM_LEFT_TO_RIGHT = 7;
-	PELVIS_ROT = 19;
-	KNEE_ROT = 22;
-	FOOT_ROT = 23;
+    
+    LEG_OFFSET_FROM_LEFT_TO_RIGHT = 7;
+    PELVIS_ROT = 19;
+    KNEE_ROT = 22;
+    FOOT_ROT = 23;
 
-	FOOT_LENGHT = 0.718 * ZOOM;
-	FOOT_DIMENSIONS = [FOOT_LENGHT * 2.0, FOOT_LENGHT, FOOT_LENGHT * 4.0];
-	// KNEE_SPACE_LENGHT = 2.079 * ZOOM;
-	// FOOT_SPACE_LENGHT = 2.116 * ZOOM;
+    FOOT_LENGHT = 0.718 * ZOOM;
+    FOOT_DIMENSIONS = [FOOT_LENGHT * 2.0, FOOT_LENGHT, FOOT_LENGHT * 4.0];
+    // KNEE_SPACE_LENGHT = 2.079 * ZOOM;
+    // FOOT_SPACE_LENGHT = 2.116 * ZOOM;
 
 
-	if (is_animate) {
-		// Pelvis Rotation
-		pelvis_x_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-		pelvis_y_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
-		pelvis_z_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
-		// Knee Rotation
-		knee_rot = frame_data(KNEE_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right));
-		// Foot Rotation
-		foot_x_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
-		foot_y_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
-		foot_z_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
-	} else {
-		if (is_right) {
-			side = " right";
-		} else {
-			side = " left";
-		}
-		// Pelvis Rotation
-		pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi/2, Pi/2, 0.1, 0);
-		pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
-		pelvis_z_rot = Slider("Pelvis Rot. Z" + side, -Pi/9, Pi/3, 0.1, 0);
-		// Knee Rotation
-		knee_rot = Slider("Knee Rot. X" + side, 0, Pi/2, 0.1, 0);
-		// Foot Rotation
-		foot_x_rot = Slider("Foot Rot. X" + side, -Pi/4, Pi/4, 0.1, 0);
-		foot_y_rot = Slider("Foot Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
-		foot_z_rot = Slider("Foot Rot. Z" + side, -Pi/9, Pi/9, 0.1, 0);
-	}
+    if (is_animate) {
+        // Pelvis Rotation
+        pelvis_x_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+        pelvis_y_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+        pelvis_z_rot = frame_data(PELVIS_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
+        // Knee Rotation
+        knee_rot = frame_data(KNEE_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right));
+        // Foot Rotation
+        foot_x_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + X);
+        foot_y_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Y);
+        foot_z_rot = frame_data(FOOT_ROT + (LEG_OFFSET_FROM_LEFT_TO_RIGHT * is_right) + Z);
+    } else {
+        if (is_right) {
+            side = " right";
+        } else {
+            side = " left";
+        }
+        // Pelvis Rotation
+        pelvis_x_rot = Slider("Pelvis Rot. X" + side, -Pi/2, Pi/2, 0.1, 0);
+        pelvis_y_rot = Slider("Pelvis Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
+        pelvis_z_rot = Slider("Pelvis Rot. Z" + side, -Pi/9, Pi/3, 0.1, 0);
+        // Knee Rotation
+        knee_rot = Slider("Knee Rot. X" + side, 0, Pi/2, 0.1, 0);
+        // Foot Rotation
+        foot_x_rot = Slider("Foot Rot. X" + side, -Pi/4, Pi/4, 0.1, 0);
+        foot_y_rot = Slider("Foot Rot. Y" + side, -Pi/9, Pi/9, 0.1, 0);
+        foot_z_rot = Slider("Foot Rot. Z" + side, -Pi/9, Pi/9, 0.1, 0);
+    }
 
-	// Femur
-	rotor_x = RotorN3(1, 0, 0, pelvis_x_rot);
-	rotor_y = RotorN3(0, 1, 0, pelvis_y_rot);
-	rotor_z = RotorN3(0, 0, 1, pelvis_z_rot);
-	global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -FEMUR_LENGHT, 0)); //auxiliary motor ("accumulated")
-	knee_point = global_motor * e0 * (~global_motor);
+    // Femur
+    rotor_x = RotorN3(1, 0, 0, pelvis_x_rot);
+    rotor_y = RotorN3(0, 1, 0, pelvis_y_rot);
+    rotor_z = RotorN3(0, 0, 1, pelvis_z_rot);
+    global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -FEMUR_LENGHT, 0)); //auxiliary motor ("accumulated")
+    knee_point = global_motor * e0 * (~global_motor);
 
-	// Tibias
-	rotor_x = RotorN3(1, 0, 0, knee_rot);
-	global_motor = global_motor * (rotor_x * TranslatorN3(0, -TIBIAS_LENGHT, 0)); //auxiliary motor ("accumulated")
-	foot_point = global_motor * e0 * (~global_motor);
+    // Tibias
+    rotor_x = RotorN3(1, 0, 0, knee_rot);
+    global_motor = global_motor * (rotor_x * TranslatorN3(0, -TIBIAS_LENGHT, 0)); //auxiliary motor ("accumulated")
+    foot_point = global_motor * e0 * (~global_motor);
 
-	// Foot
-	rotor_x = RotorN3(1, 0, 0, foot_x_rot);
-	rotor_y = RotorN3(0, 1, 0, foot_y_rot);
-	rotor_z = RotorN3(0, 0, 1, foot_z_rot);
-	global_motor = global_motor * (rotor_x * rotor_y * rotor_z); //auxiliary motor ("accumulated")
+    // Foot
+    rotor_x = RotorN3(1, 0, 0, foot_x_rot);
+    rotor_y = RotorN3(0, 1, 0, foot_y_rot);
+    rotor_z = RotorN3(0, 0, 1, foot_z_rot);
+    global_motor = global_motor * (rotor_x * rotor_y * rotor_z); //auxiliary motor ("accumulated")
 
-	// Draw
-	if (is_right) {
-		:White;
-	} else {
-		:Blue;
-	}
-	:pelvis_point - 1/2 * (0.15)^^2 * einf; // Pelvis
-	:knee_point - 1/2 * (0.15)^^2 * einf; // Knee
-	::Box(foot_point, FOOT_DIMENSIONS, global_motor); // Foot
-	
-	if (is_right) {
-		:Yellow;
-	} else {
-		:Magenta;
-	}
-	::Cylinder(pelvis_point, knee_point, 0.05); // Femur
-	::Cylinder(knee_point, foot_point, 0.05); // Tibias
+    // Draw
+    if (is_right) {
+        :White;
+    } else {
+        :Blue;
+    }
+    :pelvis_point - 1/2 * (0.15)^^2 * einf; // Pelvis
+    :knee_point - 1/2 * (0.15)^^2 * einf; // Knee
+    ::Box(foot_point, FOOT_DIMENSIONS, global_motor); // Foot
+    
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Cylinder(pelvis_point, knee_point, 0.05); // Femur
+    ::Cylinder(knee_point, foot_point, 0.05); // Tibias
 }

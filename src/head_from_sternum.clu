@@ -3,7 +3,7 @@ HeadFromSternum =
     sternum_point = _P(1);
     global_motor = _P(2);
     frame_data = _P(3);
-	is_animate = _P(4);
+    is_animate = _P(4);
 
 
     // Define some constants
@@ -11,39 +11,39 @@ HeadFromSternum =
     Y = 1;
     Z = 2;
 
-	ZOOM = 0.4;
-	NECK_LENGHT = 0.75 * ZOOM;
+    ZOOM = 0.4;
+    NECK_LENGHT = 0.75 * ZOOM;
 
 
-	HEAD_ROT = 9;
+    HEAD_ROT = 9;
 
-	// Neck
-	global_motor = global_motor * (TranslatorN3(0, NECK_LENGHT, 0));
+    // Neck
+    global_motor = global_motor * (TranslatorN3(0, NECK_LENGHT, 0));
 
-	neck_top_point = global_motor * e0 * (~global_motor);
+    neck_top_point = global_motor * e0 * (~global_motor);
 
     global_motor = global_motor * (TranslatorN3(0, NECK_LENGHT, 0));
-	head_point = global_motor * e0 * (~global_motor);
+    head_point = global_motor * e0 * (~global_motor);
 
 
-	// Head Rotation
-	if (is_animate) {
-		head_x_rot = frame_data(HEAD_ROT + X);
-		head_y_rot = frame_data(HEAD_ROT + Y);
-	} else {
-		head_x_rot = Slider("Head Rot. X" + side, -Pi/9, Pi/9, 0.1, 0);
-		head_y_rot = Slider("Head Rot. Y" + side, -Pi/4, Pi/4, 0.1, 0);
-	}
+    // Head Rotation
+    if (is_animate) {
+        head_x_rot = frame_data(HEAD_ROT + X);
+        head_y_rot = frame_data(HEAD_ROT + Y);
+    } else {
+        head_x_rot = Slider("Head Rot. X" + side, -Pi/9, Pi/9, 0.1, 0);
+        head_y_rot = Slider("Head Rot. Y" + side, -Pi/4, Pi/4, 0.1, 0);
+    }
 
-	// Head
-	rotor_x = RotorN3(1, 0, 0, head_x_rot);
-	rotor_y = RotorN3(0, 1, 0, head_y_rot);
-	global_motor = global_motor * rotor_x * rotor_y;
+    // Head
+    rotor_x = RotorN3(1, 0, 0, head_x_rot);
+    rotor_y = RotorN3(0, 1, 0, head_y_rot);
+    global_motor = global_motor * rotor_x * rotor_y;
 
-	// Draw
-	:Green;
-	::Box(head_point, [0.5, 0.7, 0.6], global_motor); // Head
+    // Draw
+    :Green;
+    ::Box(head_point, [0.5, 0.7, 0.6], global_motor); // Head
 
-	:Cyan;
-	::Cylinder(sternum_point, neck_top_point, 0.05); // Clavicle
+    :Cyan;
+    ::Cylinder(sternum_point, neck_top_point, 0.05); // Clavicle
 }

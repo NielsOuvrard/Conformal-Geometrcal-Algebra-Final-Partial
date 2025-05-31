@@ -12,20 +12,20 @@ DrawFrame(0.5,"axes"); // Reference frame
 is_animate = CheckBox("Animate", 0);
 EnableAnimate(is_animate);
 if (ExecMode & !EM_ANIMATE) {
-	Data = ReadData("../data/data.dat");
+    Data = ReadData("../data/data.dat");
     ?N = Size(Data);
 }
 ?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
 frame_data = Data(i);
 
 global_motor = TranslatorN3(
-							frame_data(ORIGIN_TRANSLATION + X),
-							frame_data(ORIGIN_TRANSLATION + Y),
-							frame_data(ORIGIN_TRANSLATION + Z)
-							)
-			* RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + X))
-			* RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + Y))
-			* RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + Z));
+                            frame_data(ORIGIN_TRANSLATION + X),
+                            frame_data(ORIGIN_TRANSLATION + Y),
+                            frame_data(ORIGIN_TRANSLATION + Z)
+                            )
+            * RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + X))
+            * RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + Y))
+            * RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + Z));
 M = global_motor;
 O = M * e0 * (~M); // Start point (origin)
 
