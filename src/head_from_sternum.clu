@@ -46,4 +46,70 @@ HeadFromSternum =
 
     :Cyan;
     ::Cylinder(sternum_point, neck_top_point, 0.05); // Clavicle
+
+    // Facial Feature Drawing
+
+    // Nose
+    nose_base_offset = TranslatorN3(0, 0.03, 0.30);
+    nose_base = global_motor * nose_base_offset * e0 * ~nose_base_offset * ~global_motor;
+
+    nose_tip_offset = TranslatorN3(0, 0, 0.2);
+    nose_tip = global_motor * nose_base_offset * nose_tip_offset * e0 * ~nose_tip_offset * ~nose_base_offset * ~global_motor;
+
+    :Red;
+    ::Cylinder(nose_base, nose_tip, 0.05);
+
+    // Eyes
+    eye_offset_y = 0.12;
+    eye_offset_x = 0.20;
+    eye_offset_z = 0.24;
+    eye_length = 0.15;
+    eye_radius = 0.1;
+
+    // Left eye
+    left_eye_offset = TranslatorN3(-eye_offset_y, eye_offset_x, eye_offset_z);
+    left_eye_base = global_motor * left_eye_offset * e0 * ~left_eye_offset * ~global_motor;
+
+    left_eye_tip = global_motor * left_eye_offset * TranslatorN3(0, 0, eye_length) * e0 *
+                   ~TranslatorN3(0, 0, eye_length) * ~left_eye_offset * ~global_motor;
+
+    // Right eye
+    right_eye_offset = TranslatorN3(eye_offset_y, eye_offset_x, eye_offset_z);
+    right_eye_base = global_motor * right_eye_offset * e0 * ~right_eye_offset * ~global_motor;
+
+    right_eye_tip = global_motor * right_eye_offset * TranslatorN3(0, 0, eye_length) * e0 *
+                    ~TranslatorN3(0, 0, eye_length) * ~right_eye_offset * ~global_motor;
+
+    :White;
+    ::Cylinder(left_eye_base, left_eye_tip, eye_radius);
+    ::Cylinder(right_eye_base, right_eye_tip, eye_radius);
+
+    // Mouth
+    mouth_offset = TranslatorN3(0, -0.10, 0.35);
+    mouth_motor = global_motor * mouth_offset;
+    mouth_center = mouth_motor * e0 * ~mouth_motor;
+    mouth_size = [0.25, 0.08, 0.1];
+
+    :Blue;
+    ::Box(mouth_center, mouth_size, mouth_motor);
+
+    // Ears
+    ear_size = mouth_size;
+    ear_offset_y = 0.25;
+    ear_offset_z = 0.1;
+    ear_vertical_offset = 0.0;
+
+    // Left ear
+    left_ear_offset = TranslatorN3(-ear_offset_y, ear_vertical_offset, ear_offset_z);
+    left_ear_motor = global_motor * left_ear_offset;
+    left_ear_center = left_ear_motor * e0 * ~left_ear_motor;
+
+    // Right ear
+    right_ear_offset = TranslatorN3(ear_offset_y, ear_vertical_offset, ear_offset_z);
+    right_ear_motor = global_motor * right_ear_offset;
+    right_ear_center = right_ear_motor * e0 * ~right_ear_motor;
+
+    :Yellow;
+    ::Box(left_ear_center, ear_size, left_ear_motor);
+    ::Box(right_ear_center, ear_size, right_ear_motor);
 }
