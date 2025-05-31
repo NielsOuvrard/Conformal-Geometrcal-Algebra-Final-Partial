@@ -6,8 +6,6 @@ ArmFromSternum =
     frame_data = _P(4);
     is_animate = _P(5);
 
-    // write a sphere - cylinder - sphere - cylinder - box
-
     // Define some constants
     X = 0;
     Y = 1;
@@ -19,19 +17,19 @@ ArmFromSternum =
 
     ZOOM = 0.4;
 
-    CLAVILCLE_LENGHT = 1.763 * ZOOM;
+    CLAVILCLE_LENGTH = 1.763 * ZOOM;
     CLAVILCLE_INCLINATION = 12; // 12%
-    HUMERUS_LENGHT = 2.393 * ZOOM;
-    ULNARADIUS_LENGHT = 2.500 * ZOOM;
+    HUMERUS_LENGTH = 2.393 * ZOOM;
+    ULNARADIUS_LENGTH = 2.500 * ZOOM;
 
 
     // Clavicle
     if (is_right) {
         clavicle_rotor = RotorN3(0, 0, 1, (CLAVILCLE_INCLINATION / 100) * (Pi / 2));
-        global_motor = global_motor * (clavicle_rotor * TranslatorN3(-CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
+        global_motor = global_motor * (clavicle_rotor * TranslatorN3(-CLAVILCLE_LENGTH, 0, 0)); //auxiliary motor ("accumulated")
     } else {
         clavicle_rotor = RotorN3(0, 0, 1, (-CLAVILCLE_INCLINATION / 100) * (Pi / 2));
-        global_motor = global_motor * (clavicle_rotor * TranslatorN3(CLAVILCLE_LENGHT, 0, 0)); //auxiliary motor ("accumulated")
+        global_motor = global_motor * (clavicle_rotor * TranslatorN3(CLAVILCLE_LENGTH, 0, 0)); //auxiliary motor ("accumulated")
     }
     shoulder_point = global_motor * e0 * (~global_motor);
 
@@ -64,12 +62,12 @@ ArmFromSternum =
     rotor_x = RotorN3(1, 0, 0, shoulder_x_rot);
     rotor_y = RotorN3(0, 1, 0, shoulder_y_rot);
     rotor_z = RotorN3(0, 0, 1, shoulder_z_rot);
-    global_motor = global_motor * (rotor_x * (~clavicle_rotor) * rotor_y * rotor_z * TranslatorN3(0, -HUMERUS_LENGHT, 0)); //auxiliary motor ("accumulated")
+    global_motor = global_motor * (rotor_x * (~clavicle_rotor) * rotor_y * rotor_z * TranslatorN3(0, -HUMERUS_LENGTH, 0)); //auxiliary motor ("accumulated")
     elbow_point = global_motor * e0 * (~global_motor);
 
-    // Humerus
+    // UlnaRadius (Forearm)
     rotor_x = RotorN3(1, 0, 0, elbow_x_rot);
-    global_motor = global_motor * (rotor_x * TranslatorN3(0, -ULNARADIUS_LENGHT, 0)); //auxiliary motor ("accumulated")
+    global_motor = global_motor * (rotor_x * TranslatorN3(0, -ULNARADIUS_LENGTH, 0)); //auxiliary motor ("accumulated")
     hand_point = global_motor * e0 * (~global_motor);
 
 

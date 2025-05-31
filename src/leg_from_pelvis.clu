@@ -14,8 +14,8 @@ LegFromPelvis =
     ZOOM = 0.4;
 
     // Define some constants
-    FEMUR_LENGHT = 3.806 * ZOOM;
-    TIBIAS_LENGHT = 3.586 * ZOOM;
+    FEMUR_LENGTH = 3.806 * ZOOM;
+    TIBIAS_LENGTH = 3.586 * ZOOM;
 
     
     LEG_OFFSET_FROM_LEFT_TO_RIGHT = 7;
@@ -23,10 +23,10 @@ LegFromPelvis =
     KNEE_ROT = 22;
     FOOT_ROT = 23;
 
-    FOOT_LENGHT = 0.718 * ZOOM;
-    FOOT_DIMENSIONS = [FOOT_LENGHT * 2.0, FOOT_LENGHT, FOOT_LENGHT * 4.0];
-    // KNEE_SPACE_LENGHT = 2.079 * ZOOM;
-    // FOOT_SPACE_LENGHT = 2.116 * ZOOM;
+    FOOT_LENGTH = 0.718 * ZOOM;
+    FOOT_DIMENSIONS = [FOOT_LENGTH * 2.0, FOOT_LENGTH, FOOT_LENGTH * 4.0];
+    // KNEE_SPACE_LENGTH = 2.079 * ZOOM;
+    // FOOT_SPACE_LENGTH = 2.116 * ZOOM;
 
 
     if (is_animate) {
@@ -62,12 +62,12 @@ LegFromPelvis =
     rotor_x = RotorN3(1, 0, 0, pelvis_x_rot);
     rotor_y = RotorN3(0, 1, 0, pelvis_y_rot);
     rotor_z = RotorN3(0, 0, 1, pelvis_z_rot);
-    global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -FEMUR_LENGHT, 0)); //auxiliary motor ("accumulated")
+    global_motor = global_motor * (rotor_x * rotor_y * rotor_z * TranslatorN3(0, -FEMUR_LENGTH, 0)); //auxiliary motor ("accumulated")
     knee_point = global_motor * e0 * (~global_motor);
 
     // Tibias
     rotor_x = RotorN3(1, 0, 0, knee_rot);
-    global_motor = global_motor * (rotor_x * TranslatorN3(0, -TIBIAS_LENGHT, 0)); //auxiliary motor ("accumulated")
+    global_motor = global_motor * (rotor_x * TranslatorN3(0, -TIBIAS_LENGTH, 0)); //auxiliary motor ("accumulated")
     foot_point = global_motor * e0 * (~global_motor);
 
     // Foot

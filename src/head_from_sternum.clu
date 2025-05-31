@@ -6,23 +6,23 @@ HeadFromSternum =
     is_animate = _P(4);
 
 
-    // Define some constants
+    // Define constants
     X = 0;
     Y = 1;
     Z = 2;
 
     ZOOM = 0.4;
-    NECK_LENGHT = 0.75 * ZOOM;
+    NECK_LENGTH = 0.75 * ZOOM;
 
 
     HEAD_ROT = 9;
 
     // Neck
-    global_motor = global_motor * (TranslatorN3(0, NECK_LENGHT, 0));
+    global_motor = global_motor * (TranslatorN3(0, NECK_LENGTH, 0));
 
     neck_top_point = global_motor * e0 * (~global_motor);
 
-    global_motor = global_motor * (TranslatorN3(0, NECK_LENGHT, 0));
+    global_motor = global_motor * (TranslatorN3(0, NECK_LENGTH, 0));
     head_point = global_motor * e0 * (~global_motor);
 
 
