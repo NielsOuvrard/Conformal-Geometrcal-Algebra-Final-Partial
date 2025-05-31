@@ -89,4 +89,45 @@ ArmFromSternum =
     ::Cylinder(sternum_point, shoulder_point, 0.05); // Clavicle
     ::Cylinder(shoulder_point, elbow_point, 0.05); // Humerus
     ::Cylinder(elbow_point, hand_point, 0.05); // UlnaRadius
+	
+    // Fingers
+    finger_size = [0.05, 0.08, 0.2]; // width, height, length
+    finger_spacing = 0.12;
+    finger_rotor = RotorN3(1, 0, 0, -Pi/2);
+
+    // Left finger
+    finger_offset_1 = TranslatorN3(-finger_spacing, -0.2, 0);
+    finger_motor_1 = global_motor * finger_offset_1 * finger_rotor;
+    finger_pos_1 = finger_motor_1 * e0 * ~finger_motor_1;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_1, finger_size, finger_motor_1);
+
+    // Middle finger
+    finger_offset_2 = TranslatorN3(0, -0.2, 0);
+    finger_motor_2 = global_motor * finger_offset_2 * finger_rotor;
+    finger_pos_2 = finger_motor_2 * e0 * ~finger_motor_2;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_2, finger_size, finger_motor_2);
+
+    // Right finger
+    finger_offset_3 = TranslatorN3(finger_spacing, -0.2, 0);
+    finger_motor_3 = global_motor * finger_offset_3 * finger_rotor;
+    finger_pos_3 = finger_motor_3 * e0 * ~finger_motor_3;
+
+    if (is_right) {
+        :Yellow;
+    } else {
+        :Magenta;
+    }
+    ::Box(finger_pos_3, finger_size, finger_motor_3);
 }

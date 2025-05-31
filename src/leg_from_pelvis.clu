@@ -93,4 +93,13 @@ LegFromPelvis =
     }
     ::Cylinder(pelvis_point, knee_point, 0.05); // Femur
     ::Cylinder(knee_point, foot_point, 0.05); // Tibias
+
+    // Floor
+    floor_offset = TranslatorN3(0, -2.15, 0);  // Adjust Y coordinate to position the floor
+    floor_motor = floor_offset;               // Using identity motor for global space
+    floor_center = floor_motor * e0 * ~floor_motor;
+    floor_size = [10.0, 0.1, 10.0];          // Wide and thin box for floor
+
+    :Red;                                   // Set color to gray
+    ::Box(floor_center, floor_size, floor_motor);
 }
