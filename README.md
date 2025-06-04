@@ -17,6 +17,10 @@ Screenshots of the animation are provided below, of the legs part:
 Screenshots of the animation are provided below, of the arms part:
 ![Screenshot 2](Screenshots/Begin_of_arms.png)
 
+Screenshots of details on the body and scene are provided below:
+![Screenshot 3](Screenshots/Face_Details.png)
+![Screenshot 4](Screenshots/Floor_Plane.png)
+
 ### Key Components
 
 - **Global Motor Calculation:**  
