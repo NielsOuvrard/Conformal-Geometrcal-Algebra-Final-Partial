@@ -15,10 +15,11 @@ if (ExecMode & !EM_ANIMATE) {
     Data = ReadData("../data/data.dat");
     ?N = Size(Data);
 }
-?i = round(Time * ANIMATION_SPEED, 0) % N + 1; // +1 because of 1-based indexing
-frame_data = Data(i);
+?i = round(Time * ANIMATION_SPEED, 0) % N;
+frame_data = Data(i + 1); // +1 because of 1-based indexing
 
-global_motor = TranslatorN3(
+if (is_animate){	
+	global_motor = TranslatorN3(
                             frame_data(ORIGIN_TRANSLATION + X),
                             frame_data(ORIGIN_TRANSLATION + Y),
                             frame_data(ORIGIN_TRANSLATION + Z)
@@ -26,6 +27,22 @@ global_motor = TranslatorN3(
             * RotorN3(1, 0, 0, frame_data(ORIGIN_ROT + X))
             * RotorN3(0, 1, 0, frame_data(ORIGIN_ROT + Y))
             * RotorN3(0, 0, 1, frame_data(ORIGIN_ROT + Z));
+} else{
+	body_x_tra = Slider("Body Translation. X",-4,4,0.1,0);
+	body_y_tra = Slider("Body Translation. Y",-4,4,0.1,0);
+	body_z_tra = Slider("Body Translation. Z",-4,4,0.1,0);
+
+	body_x_rot = Slider("Body Rot. X",-Pi,Pi,0.1,0);
+	body_y_rot = Slider("Body Rot. Y",-Pi,Pi,0.1,0);
+	body_z_rot = Slider("Body Rot. Z",-Pi,Pi,0.1,0);
+    
+	global_motor = TranslatorN3(body_x_tra, body_y_tra, body_z_tra)
+        * RotorN3(1, 0, 0, body_x_rot)
+        * RotorN3(0, 1, 0, body_y_rot)
+        * RotorN3(0, 0, 1, body_z_rot);
+	
+}
+
 M = global_motor;
 O = M * e0 * (~M); // Start point (origin)
 
